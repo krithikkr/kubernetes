@@ -3,9 +3,9 @@ kind: ReplicationController
 metadata:
   labels:
     name: maven-web-application
-  name: maven-web-application
+  name: maven-web
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -18,7 +18,6 @@ spec:
         - name: maven-web-application
           containerPort: 8080      
 ---
-# Node Port Service
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,53 +25,9 @@ metadata:
     name: maven-web-application
   name: maven-web-application
 spec:
-  type: NodePort
-  ports:
-    - port: 8080
-      targetPort: 8080
-  selector:
-    name: maven-web-application
----
-# Mongo host path rc
-apiVersion: v1
-kind: ReplicationController
-metadata:
-  labels:
-    name: mongo
-  name: mongo-controller
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        name: mongo
-    spec:
-      containers:
-      - image: mongo
-        name: mongo
-        ports:
-        - name: mongo
-          containerPort: 27017
-          hostPort: 27017
-        volumeMounts:
-        - name: mongo-persistent-storage
-          mountPath: /data/db
-      volumes:
-      - name: mongo-persistent-storage
-        hostPath:
-         path: /tmp/dbbackup
----
-# Mongo Node Port RC
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    name: mongo
-  name: mongo
-spec:
   type: ClusterIP
   ports:
     - port: 27017
       targetPort: 27017
   selector:
-    name: mongo
+    name: maven-web
