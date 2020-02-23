@@ -9,7 +9,7 @@ spec:
   template:
     metadata:
       labels:
-        name: maven-web-application
+        name: maven-web
     spec:
       containers:
       - image: dockerhandson/maven-web-application
@@ -22,12 +22,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    name: maven-web-application
-  name: maven-web-application
+    name: maven-web
+  name: maven-web
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
-    - port: 27017
-      targetPort: 27017
+    - port: 8080
+      targetPort: 8080
   selector:
     name: maven-web
